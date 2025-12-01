@@ -1,0 +1,10 @@
+[submodule "lib/openzeppelin-contracts"]
+	path = lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "lib/Compose"]
+	path = lib/Compose
+	url = https://github.com/Perfect-Abstractions/Compose
+
+[submodule "lib/tmp-ComposeERC4626"]
+	path = lib/tmp-ComposeERC4626
+	url = https://github.com/heypran/Compose
