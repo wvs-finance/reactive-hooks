@@ -1,4 +1,16 @@
 {
+  "lib/Compose": {
+    "rev": "01a4e79b03b6c669e223e4588d991ea868a9aef0"
+  },
+  "lib/Non-Locking-FlashLoan": {
+    "rev": "f06da53e3a312f35f88eaa4bc47225bba5c20480"
+  },
+  "lib/forge-std": {
+    "tag": {
+      "name": "v1.10.0",
+      "rev": "8bbcf6e3f8f62f419e5429a0bd89331c85c37824"
+    }
+  },
   "lib/foundry-devops": {
     "tag": {
       "name": "0.4.0",
@@ -11,11 +23,11 @@
       "rev": "67c56aee3b6a9f4982bf487084bd8da1f6638da0"
     }
   },
-  "lib/solmate": {
-    "rev": "89365b880c4f3c786bdd453d4b8e8fe410344a69"
-  },
-  "lib/universal-router": {
-    "rev": "41183d6eb154f0ab0e74a0e911a5ef9ea51fc4bd"
+  "lib/openzeppelin-contracts": {
+    "tag": {
+      "name": "v5.5.0",
+      "rev": "fcbae5394ae8ad52d8e580a3477db99814b9d565"
+    }
   },
   "lib/openzeppelin-contracts-upgradeable": {
     "tag": {
@@ -23,25 +35,16 @@
       "rev": "e725abddf1e01cf05ace496e950fc8e243cc7cab"
     }
   },
-  "lib/v4-periphery": {
-    "rev": "60cd93803ac2b7fa65fd6cd351fd5fd4cc8c9db5"
-  },
   "lib/reactive-smart-contract-demos": {
     "rev": "e7ea8bdbce7f0bcd7c3d961f698a6c752188eda2"
   },
-  "lib/Non-Locking-FlashLoan": {
-    "rev": "f06da53e3a312f35f88eaa4bc47225bba5c20480"
+  "lib/solmate": {
+    "rev": "89365b880c4f3c786bdd453d4b8e8fe410344a69"
   },
-  "lib/openzeppelin-contracts": {
-    "tag": {
-      "name": "v5.4.0",
-      "rev": "c64a1edb67b6e3f4a15cca8909c9482ad33a02b0"
-    }
+  "lib/universal-router": {
+    "rev": "41183d6eb154f0ab0e74a0e911a5ef9ea51fc4bd"
   },
-  "lib/forge-std": {
-    "tag": {
-      "name": "v1.10.0",
-      "rev": "8bbcf6e3f8f62f419e5429a0bd89331c85c37824"
-    }
+  "lib/v4-periphery": {
+    "rev": "60cd93803ac2b7fa65fd6cd351fd5fd4cc8c9db5"
   }
 }

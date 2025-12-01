@@ -3,8 +3,17 @@ src = "src"
 out = "foundry-out"
 libs = ["node_modules","lib"]
 ffi = true
-solc_version = "0.8.26"
+solc_version = "0.8.30"
 evm_version = "cancun"
+auto_detect_remappings = false
+remappings = [
+    "forge-std/=lib/forge-std/src/",
+    "@uniswap/v4-periphery/=lib/v4-periphery/",
+    "@uniswap/v4-core/=lib/v4-periphery/lib/v4-core",
+    "@reactive/reactive-lib/=lib/reactive-smart-contract-demos/lib/reactive-lib/src/",
+    "@openzeppelin/=lib/openzeppelin-contracts/contracts/",
+    "@compose/=lib/Compose/src/"
+]
 
 [rpc_endpoints]
 
@@ -12,7 +21,6 @@ sepolia = "https://g.w.lavanet.xyz:443/gateway/sep1/rpc-http/0e1cfb566bd2ce33c7c
 reactive-testnet = "https://lasna-rpc.rnk.dev/"
 
 [etherscan]
-
 sepolia = {key = "${ETHERSCAN_API_KEY}"}
 
 
