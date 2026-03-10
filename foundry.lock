@@ -1,4 +1,16 @@
 {
+  "lib/Compose": {
+    "rev": "947c1f961aae7c148b49605b6f66324f01a37013"
+  },
+  "lib/Non-Locking-FlashLoan": {
+    "rev": "f06da53e3a312f35f88eaa4bc47225bba5c20480"
+  },
+  "lib/forge-std": {
+    "tag": {
+      "name": "v1.10.0",
+      "rev": "8bbcf6e3f8f62f419e5429a0bd89331c85c37824"
+    }
+  },
   "lib/foundry-devops": {
     "tag": {
       "name": "0.4.0",
@@ -11,11 +23,11 @@
       "rev": "67c56aee3b6a9f4982bf487084bd8da1f6638da0"
     }
   },
-  "lib/solmate": {
-    "rev": "89365b880c4f3c786bdd453d4b8e8fe410344a69"
-  },
-  "lib/universal-router": {
-    "rev": "41183d6eb154f0ab0e74a0e911a5ef9ea51fc4bd"
+  "lib/openzeppelin-contracts": {
+    "tag": {
+      "name": "v5.4.0",
+      "rev": "c64a1edb67b6e3f4a15cca8909c9482ad33a02b0"
+    }
   },
   "lib/openzeppelin-contracts-upgradeable": {
     "tag": {
@@ -23,25 +35,34 @@
       "rev": "e725abddf1e01cf05ace496e950fc8e243cc7cab"
     }
   },
-  "lib/v4-periphery": {
-    "rev": "60cd93803ac2b7fa65fd6cd351fd5fd4cc8c9db5"
+  "lib/reactive-lib": {
+    "tag": {
+      "name": "v0.2.0",
+      "rev": "d664678a7d86204c9391af4cedfd5ae0b0b904e4"
+    }
   },
   "lib/reactive-smart-contract-demos": {
     "rev": "e7ea8bdbce7f0bcd7c3d961f698a6c752188eda2"
   },
-  "lib/Non-Locking-FlashLoan": {
-    "rev": "f06da53e3a312f35f88eaa4bc47225bba5c20480"
-  },
-  "lib/openzeppelin-contracts": {
+  "lib/solady": {
     "tag": {
-      "name": "v5.4.0",
-      "rev": "c64a1edb67b6e3f4a15cca8909c9482ad33a02b0"
+      "name": "v0.1.26",
+      "rev": "acd959aa4bd04720d640bf4e6a5c71037510cc4b"
     }
   },
-  "lib/forge-std": {
+  "lib/solmate": {
+    "rev": "89365b880c4f3c786bdd453d4b8e8fe410344a69"
+  },
+  "lib/universal-router": {
+    "rev": "41183d6eb154f0ab0e74a0e911a5ef9ea51fc4bd"
+  },
+  "lib/v3-core": {
     "tag": {
-      "name": "v1.10.0",
-      "rev": "8bbcf6e3f8f62f419e5429a0bd89331c85c37824"
+      "name": "v1.0.0",
+      "rev": "e3589b192d0be27e100cd0daaf6c97204fdb1899"
     }
+  },
+  "lib/v4-periphery": {
+    "rev": "60cd93803ac2b7fa65fd6cd351fd5fd4cc8c9db5"
   }
 }

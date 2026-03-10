@@ -1,0 +1,15 @@
+[submodule "lib/Compose"]
+	path = lib/Compose
+	url = https://github.com/Perfect-Abstractions/Compose
+[submodule "lib/solady"]
+	path = lib/solady
+	url = https://github.com/Vectorized/solady
+[submodule "lib/reactive-lib"]
+	path = lib/reactive-lib
+	url = https://github.com/Reactive-Network/reactive-lib
+[submodule "lib/v3-core"]
+	path = lib/v3-core
+	url = https://github.com/Uniswap/v3-core
+[submodule "lib/typed-uniswap-v4"]
+	path = lib/typed-uniswap-v4
+	url = https://github.com/wvs-finance/typed-uniswap-v4
