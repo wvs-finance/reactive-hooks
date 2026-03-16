@@ -21,7 +21,8 @@ import {
     setBindingState,
     getBindingExists,
     getBinding,
-    getBindingCountByOrigin
+    getBindingCountByOrigin,
+    removeBinding
 } from "../modules/EventDispatchStorageMod.sol";
 
 import {isSelfSync} from "./SelfSyncLib.sol";
@@ -99,6 +100,17 @@ function resumeBind(EventDispatchStorage storage edt, bytes32 _bindingId) {
 }
 
 // ──────────────────────────────────────────────
+// Unbind — remove callback routing (F9)
+// Origin subscription persists (independent lifecycle per Q8-B).
+// ──────────────────────────────────────────────
+
+/// @dev Unbind — remove callback routing. Origin subscription persists (independent lifecycle).
+function unbind(EventDispatchStorage storage edt, bytes32 _originId, bytes32 _callbackId) {
+    bytes32 bId = bindingId(_originId, _callbackId);
+    removeBinding(edt, _originId, bId);
+}
+
+// ──────────────────────────────────────────────
 // Quote-Then-Fund (F10)
 // Per reactive-smart-contracts skill: On Reactive Network, if you send ETH
 // to SystemContract (0x...fffFfF) as part of a transaction that later reverts,
@@ -163,6 +175,42 @@ function fundedBind(
     // Phase 3: Funding — caller handles depositToSystem() with `cost` amount
     // We do NOT send ETH here because this is a free function.
     // The reactive contract calls depositToSystem(address(this)) after this returns.
+}
+
+// ──────────────────────────────────────────────
+// Auto-Activate (F6) — self-sync funding handler
+// When the contract receives ETH, a self-sync event triggers ReactVM to
+// activate PendingFunding bindings. This function walks all bindings for
+// an origin and activates PendingFunding ones in FIFO order until funds
+// are exhausted.
+// ──────────────────────────────────────────────
+
+/// @dev Auto-activate PendingFunding bindings for an origin when funding arrives.
+///      Called by the self-sync event handler when a Funded event is detected.
+///      Activates in FIFO order until funds are exhausted.
+///      Per reactive-smart-contracts skill: this runs on RN instance after
+///      ReactVM emits a self-sync callback triggered by receive() → Funded event.
+function activatePendingBindings(
+    EventDispatchStorage storage edt,
+    bytes32 _originId,
+    uint256 availableFunds,
+    uint256 costPerActivation
+) returns (uint256 activated) {
+    DLL storage list = edt.bindingsByOrigin[_originId];
+    uint256 remaining = availableFunds;
+
+    bytes32 current = list.nodes[SENTINEL][NEXT];
+    while (current != SENTINEL) {
+        Binding storage b = edt.bindings[current];
+        if (b.state == BindingState.PendingFunding) {
+            if (remaining >= costPerActivation) {
+                b.state = BindingState.Active;
+                remaining -= costPerActivation;
+                activated++;
+            }
+        }
+        current = list.nodes[current][NEXT];
+    }
 }
 
 // ──────────────────────────────────────────────

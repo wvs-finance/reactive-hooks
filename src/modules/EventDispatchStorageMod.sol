@@ -2,7 +2,8 @@
 pragma solidity ^0.8.26;
 
 import {Binding, BindingState, bindingId} from "../types/Binding.sol";
-import {DLL, pushBack, contains, size, head, isEmpty} from "../libraries/DoublyLinkedListLib.sol";
+import {DLL, pushBack, contains, size, head, isEmpty, remove} from "../libraries/DoublyLinkedListLib.sol";
+import {BindingNotFound} from "../types/Binding.sol";
 
 /// @dev Event Dispatch Table storage. Maps origins to callbacks via bindings.
 ///      The EDT is the core routing structure for the reactive subscription system.
@@ -49,6 +50,16 @@ function setBinding(
 /// @dev Update a binding's state. Caller must verify binding exists.
 function setBindingState(EventDispatchStorage storage s, bytes32 id, BindingState newState) {
     s.bindings[id].state = newState;
+}
+
+/// @dev Remove a binding from the EDT. Removes from DLL and clears storage.
+function removeBinding(EventDispatchStorage storage s, bytes32 _originId, bytes32 _bindingId) {
+    if (!s.exists[_bindingId]) revert BindingNotFound(_bindingId);
+
+    remove(s.bindingsByOrigin[_originId], _bindingId);
+    delete s.bindings[_bindingId];
+    s.exists[_bindingId] = false;
+    s.totalCount--;
 }
 
 // --- Getters ---
