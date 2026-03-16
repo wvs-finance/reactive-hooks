@@ -15,7 +15,7 @@ subtasks:
 - T006
 phase: Phase 4 - Scaffold Kontrol Proofs
 assignee: ''
-agent: ''
+agent: "claude"
 shell_pid: "45126"
 review_status: ''
 reviewed_by: ''
@@ -211,3 +211,4 @@ forge test --match-test prove_ -vvv
 ## Activity Log
 
 - 2026-03-16T12:00:00Z – system – lane=planned – Prompt created.
+- 2026-03-16T12:02:48Z – claude – shell_pid=45126 – lane=doing – Assigned agent via workflow command
