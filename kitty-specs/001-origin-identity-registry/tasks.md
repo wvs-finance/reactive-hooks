@@ -87,15 +87,15 @@
 **Estimated size**: ~350 lines
 
 ### Included Subtasks
-- [ ] T014 Run Slither on `src/types/OriginEndpoint.sol` and `src/modules/OriginRegistryStorageMod.sol`
-- [ ] T015 Run Semgrep on same files
-- [ ] T016 Fix any findings from T014/T015
-- [ ] T017 [P] Write test_F1_1_determinism in `test/F1_OriginIdentity.t.sol`
-- [ ] T018 [P] Write test_F1_2_injectivity_eventSig
-- [ ] T019 [P] Write test_F1_3_injectivity_chainId
-- [ ] T020 [P] Write test_F1_4_injectivity_emitter
-- [ ] T021 Write test_F1_5_register_enumerate (register + lookup round-trip + chain enumeration)
-- [ ] T022 Write test_F1_6_idempotent_registration
+- [x] T014 Run Slither on `src/types/OriginEndpoint.sol` and `src/modules/OriginRegistryStorageMod.sol`
+- [x] T015 Run Semgrep on same files
+- [x] T016 Fix any findings from T014/T015
+- [x] T017 [P] Write test_F1_1_determinism in `test/F1_OriginIdentity.t.sol`
+- [x] T018 [P] Write test_F1_2_injectivity_eventSig
+- [x] T019 [P] Write test_F1_3_injectivity_chainId
+- [x] T020 [P] Write test_F1_4_injectivity_emitter
+- [x] T021 Write test_F1_5_register_enumerate (register + lookup round-trip + chain enumeration)
+- [x] T022 Write test_F1_6_idempotent_registration
 
 ### Implementation Notes
 - Static analysis runs FIRST (Phase 5 of TDD skill)
