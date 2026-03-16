@@ -1,7 +1,7 @@
 ---
 work_package_id: WP01
 title: Origin Types & Kontrol Proofs
-lane: "doing"
+lane: "for_review"
 dependencies: []
 base_branch: feat/subscription-lib-replace-mod
 base_commit: 350d911a0a981615edf1bd2ee40d883c95d67912
@@ -212,3 +212,4 @@ forge test --match-test prove_ -vvv
 
 - 2026-03-16T12:00:00Z – system – lane=planned – Prompt created.
 - 2026-03-16T12:02:48Z – claude – shell_pid=45126 – lane=doing – Assigned agent via workflow command
+- 2026-03-16T12:12:26Z – claude – shell_pid=45126 – lane=for_review – All 5 proofs pass (INV-001, INV-002a/b/c, INV-003). Ready for review.
