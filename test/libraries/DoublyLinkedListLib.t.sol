@@ -2,7 +2,7 @@
 pragma solidity ^0.8.26;
 
 import "forge-std/Test.sol";
-import {DLL, SENTINEL, PREV, NEXT, contains, isEmpty, size, head, tail, pushBack, InvalidNode, NodeAlreadyExists} from "../../src/libraries/DoublyLinkedListLib.sol";
+import {DLL, SENTINEL, PREV, NEXT, contains, isEmpty, size, head, tail, pushBack, pushFront, InvalidNode, NodeAlreadyExists} from "../../src/libraries/DoublyLinkedListLib.sol";
 
 contract DLLHarness {
     DLL internal list;
@@ -13,6 +13,7 @@ contract DLLHarness {
     function head_() external view returns (bytes32) { return head(list); }
     function tail_() external view returns (bytes32) { return tail(list); }
     function pushBack_(bytes32 id) external { pushBack(list, id); }
+    function pushFront_(bytes32 id) external { pushFront(list, id); }
 }
 
 contract DoublyLinkedListLibTest is Test {
@@ -75,5 +76,36 @@ contract DoublyLinkedListLibTest is Test {
         harness.pushBack_(A);
         vm.expectRevert(abi.encodeWithSelector(NodeAlreadyExists.selector, A));
         harness.pushBack_(A);
+    }
+
+    function test_pushFront_singleNode() public {
+        bytes32 A = bytes32(uint256(1));
+        harness.pushFront_(A);
+        assertTrue(harness.contains_(A));
+        assertEq(harness.size_(), 1);
+        assertEq(harness.head_(), A);
+        assertEq(harness.tail_(), A);
+    }
+
+    function test_pushFront_twoNodes_orderPreserved() public {
+        bytes32 A = bytes32(uint256(1));
+        bytes32 B = bytes32(uint256(2));
+        harness.pushFront_(A);
+        harness.pushFront_(B);
+        assertEq(harness.head_(), B);  // B was pushed to front
+        assertEq(harness.tail_(), A);
+        assertEq(harness.size_(), 2);
+    }
+
+    function test_pushFront_revertOnSentinel() public {
+        vm.expectRevert(InvalidNode.selector);
+        harness.pushFront_(SENTINEL);
+    }
+
+    function test_pushFront_revertOnDuplicate() public {
+        bytes32 A = bytes32(uint256(1));
+        harness.pushFront_(A);
+        vm.expectRevert(abi.encodeWithSelector(NodeAlreadyExists.selector, A));
+        harness.pushFront_(A);
     }
 }

@@ -67,3 +67,9 @@ function pushBack(DLL storage self, bytes32 id) {
     _validateInsert(self, id);
     _insert(self, self.nodes[SENTINEL][PREV], id, SENTINEL);
 }
+
+/// @dev Prepend `id` to the front of the list.
+function pushFront(DLL storage self, bytes32 id) {
+    _validateInsert(self, id);
+    _insert(self, SENTINEL, id, self.nodes[SENTINEL][NEXT]);
+}
