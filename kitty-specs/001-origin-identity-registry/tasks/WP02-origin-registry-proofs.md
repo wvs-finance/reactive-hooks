@@ -1,29 +1,32 @@
 ---
-work_package_id: "WP02"
+work_package_id: WP02
+title: Origin Registry Storage & System Proofs
+lane: "doing"
+dependencies: [WP01]
+base_branch: 001-origin-identity-registry-WP01
+base_commit: 330991e3a3b060d9acd84b160554f11870d38c8f
+created_at: '2026-03-16T12:19:42.057615+00:00'
 subtasks:
-  - "T007"
-  - "T008"
-  - "T009"
-  - "T010"
-  - "T011"
-  - "T012"
-  - "T013"
-title: "Origin Registry Storage & System Proofs"
-phase: "Phase 4 - Scaffold Kontrol Proofs"
-lane: "planned"
-assignee: ""
-agent: ""
-shell_pid: ""
-review_status: ""
-reviewed_by: ""
-dependencies: ["WP01"]
-requirement_refs: ["FR-002", "FR-003", "FR-004", "FR-006"]
+- T007
+- T008
+- T009
+- T010
+- T011
+- T012
+- T013
+phase: Phase 4 - Scaffold Kontrol Proofs
+assignee: ''
+agent: ''
+shell_pid: "60179"
+review_status: ''
+reviewed_by: ''
 history:
-  - timestamp: "2026-03-16T12:00:00Z"
-    lane: "planned"
-    agent: "system"
-    shell_pid: ""
-    action: "Prompt generated via /spec-kitty.tasks"
+- timestamp: '2026-03-16T12:00:00Z'
+  lane: planned
+  agent: system
+  shell_pid: ''
+  action: Prompt generated via /spec-kitty.tasks
+requirement_refs: [FR-002, FR-003, FR-004, FR-006]
 ---
 
 # Work Package Prompt: WP02 – Origin Registry Storage & System Proofs
