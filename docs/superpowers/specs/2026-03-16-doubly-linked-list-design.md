@@ -6,7 +6,7 @@ A generic, gas-efficient doubly-linked list for Solidity `^0.8.26`, built on the
 
 ## Motivation
 
-The EDT requires an ordered container of `bytes32` binding IDs per origin, supporting O(1) insert/remove and forward/reverse iteration with caller-side pause/skip. No existing Solidity library satisfies all project constraints: `bytes32` native nodes, free-function convention, namespaced storage compatibility, and no unused features (sorted insertion). A custom ~80-100 line implementation fills this gap.
+The EDT requires an ordered container of `bytes32` binding IDs per origin, supporting O(1) insert/remove and forward/reverse iteration with caller-side pause/skip. No existing Solidity library satisfies all project constraints: `bytes32` native nodes, free-function convention, namespaced storage compatibility, and no unused features (sorted insertion). A custom ~100-120 line implementation fills this gap.
 
 ## Storage Layout
 
@@ -20,6 +20,10 @@ struct DLL {
     mapping(bytes32 => mapping(bool => bytes32)) nodes;
 }
 ```
+
+### Co-location Rationale
+
+The `DLL` struct, constants, errors, and free functions are all defined in a single file (`DoublyLinkedListLib.sol`). The project normally separates types into `src/types/`, but the DLL is a self-contained primitive with no external consumers that need the type without the functions. Co-location avoids a circular import and keeps the primitive atomic.
 
 ### Sentinel Pattern
 
@@ -73,8 +77,8 @@ All free functions taking `DLL storage self` as first parameter. Every mutation 
 
 | Function | Signature | Returns |
 |----------|-----------|---------|
-| `next` | `(DLL storage, bytes32 id) → bytes32` | Next node, or `SENTINEL` if tail |
-| `prev` | `(DLL storage, bytes32 id) → bytes32` | Prev node, or `SENTINEL` if head |
+| `next` | `(DLL storage, bytes32 id) → bytes32` | Next node, or `SENTINEL` if tail. Reverts if `id` does not exist. |
+| `prev` | `(DLL storage, bytes32 id) → bytes32` | Prev node, or `SENTINEL` if head. Reverts if `id` does not exist. |
 | `head` | `(DLL storage) → bytes32` | First node, or `SENTINEL` if empty |
 | `tail` | `(DLL storage) → bytes32` | Last node, or `SENTINEL` if empty |
 | `size` | `(DLL storage) → uint256` | Node count |
@@ -91,7 +95,7 @@ while (node != SENTINEL) {
 }
 ```
 
-The DLL has no iteration helpers. Pause/skip logic belongs in the application layer (EDT).
+The DLL has no iteration helpers. The research reference (Section 5) suggested built-in `forEachActive`-style helpers, but this was rejected: pause/skip semantics are EDT-specific and would couple the generic primitive to application logic. Pause/skip belongs in the EDT dispatch layer.
 
 ## Core Algorithm
 
@@ -158,6 +162,8 @@ Every mutation validates before modifying state:
 - **Existence guard (insert)**: `contains(id)` → revert `NodeAlreadyExists(id)`
 - **Existence guard (remove)**: `!contains(id)` → revert `NodeDoesNotExist(id)`
 - **Anchor guard (insertAfter/Before)**: `!contains(anchor)` → revert `NodeDoesNotExist(anchor)`
+- **Anchor sentinel guard**: `anchor == SENTINEL` in `insertAfter`/`insertBefore` → revert `InvalidNode()`. Use `pushFront`/`pushBack` for boundary insertion instead.
+- **Query guard (next/prev)**: `!contains(id)` → revert `NodeDoesNotExist(id)`. This prevents silent `SENTINEL` returns for non-existent nodes being confused with legitimate tail/head results.
 
 ## Testing Strategy
 
@@ -193,8 +199,8 @@ Deterministic tests covering every function and revert path:
 ## File Layout
 
 ```
-src/libraries/DoublyLinkedListLib.sol    — struct DLL + free functions (~80-100 lines)
-test/libraries/DoublyLinkedListLib.t.sol — unit + fuzz + invariant tests (~150-200 lines)
+src/libraries/DoublyLinkedListLib.sol    — struct DLL + free functions (~100-120 lines)
+test/libraries/DoublyLinkedListLib.t.sol — unit + fuzz + invariant tests (~250-300 lines)
 ```
 
 ## Dependencies
