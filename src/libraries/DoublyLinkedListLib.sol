@@ -46,3 +46,24 @@ function head(DLL storage self) view returns (bytes32) {
 function tail(DLL storage self) view returns (bytes32) {
     return self.nodes[SENTINEL][PREV];
 }
+
+/// @dev Insert `id` between `prevNode` and `nextNode`. Internal — no validation.
+function _insert(DLL storage self, bytes32 prevNode, bytes32 id, bytes32 nextNode) {
+    self.nodes[id][PREV] = prevNode;
+    self.nodes[id][NEXT] = nextNode;
+    self.nodes[prevNode][NEXT] = id;
+    self.nodes[nextNode][PREV] = id;
+    self.size++;
+}
+
+/// @dev Validates `id` is not sentinel and does not already exist. Used by all insert functions.
+function _validateInsert(DLL storage self, bytes32 id) view {
+    if (id == SENTINEL) revert InvalidNode();
+    if (contains(self, id)) revert NodeAlreadyExists(id);
+}
+
+/// @dev Append `id` to the end of the list.
+function pushBack(DLL storage self, bytes32 id) {
+    _validateInsert(self, id);
+    _insert(self, self.nodes[SENTINEL][PREV], id, SENTINEL);
+}
