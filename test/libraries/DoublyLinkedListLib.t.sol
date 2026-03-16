@@ -312,4 +312,47 @@ contract DoublyLinkedListLibTest is Test {
         vm.expectRevert(InvalidNode.selector);
         harness.insertBefore_(A, SENTINEL);
     }
+
+    function testFuzz_insertRemoveSequence(bytes32[] calldata ids) public {
+        // Deduplicate and filter sentinel
+        uint256 count;
+        for (uint256 i; i < ids.length && i < 64; i++) {
+            if (ids[i] == SENTINEL) continue;
+            if (harness.contains_(ids[i])) continue;
+            harness.pushBack_(ids[i]);
+            count++;
+        }
+        assertEq(harness.size_(), count);
+
+        // Remove all by walking from head
+        bytes32 node = harness.head_();
+        while (node != SENTINEL) {
+            bytes32 nxt = harness.next_(node);
+            harness.remove_(node);
+            node = nxt;
+        }
+        assertEq(harness.size_(), 0);
+        assertTrue(harness.isEmpty_());
+    }
+
+    function testFuzz_orderPreservation(bytes32[] calldata ids) public {
+        // Insert unique non-sentinel IDs via pushBack, track insertion order
+        bytes32[] memory inserted = new bytes32[](ids.length < 64 ? ids.length : 64);
+        uint256 count;
+        for (uint256 i; i < ids.length && i < 64; i++) {
+            if (ids[i] == SENTINEL) continue;
+            if (harness.contains_(ids[i])) continue;
+            harness.pushBack_(ids[i]);
+            inserted[count] = ids[i];
+            count++;
+        }
+
+        // Walk forward and verify order matches insertion order
+        bytes32 node = harness.head_();
+        for (uint256 i; i < count; i++) {
+            assertEq(node, inserted[i]);
+            node = harness.next_(node);
+        }
+        assertEq(node, SENTINEL);  // past tail
+    }
 }
