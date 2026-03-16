@@ -19,6 +19,23 @@ contract DLLHarness {
     function remove_(bytes32 id) external { remove(list, id); }
     function insertAfter_(bytes32 anchor, bytes32 id) external { insertAfter(list, anchor, id); }
     function insertBefore_(bytes32 anchor, bytes32 id) external { insertBefore(list, anchor, id); }
+
+    /// @dev Bounded random insert/remove for invariant testing.
+    function pushBack_bounded(uint256 rawId) external {
+        bytes32 id = bytes32(rawId % 256 + 1);  // 1..256, never sentinel
+        if (contains(list, id)) return;  // skip if exists (invariant engine calls randomly)
+        pushBack(list, id);
+    }
+
+    function remove_bounded(uint256 rawId) external {
+        bytes32 id = bytes32(rawId % 256 + 1);
+        if (!contains(list, id)) return;  // skip if not exists
+        uint256 sizeBefore = size(list);
+        remove(list, id);
+        // INV-4: after remove, contains is false and size decremented by 1
+        assert(!contains(list, id));
+        assert(size(list) == sizeBefore - 1);
+    }
 }
 
 contract DoublyLinkedListLibTest is Test {
@@ -354,5 +371,55 @@ contract DoublyLinkedListLibTest is Test {
             node = harness.next_(node);
         }
         assertEq(node, SENTINEL);  // past tail
+    }
+}
+
+contract DoublyLinkedListInvariantTest is Test {
+    DLLHarness internal harness;
+
+    function setUp() public {
+        harness = new DLLHarness();
+        targetContract(address(harness));
+        // Only call bounded mutation handlers
+        bytes4[] memory selectors = new bytes4[](2);
+        selectors[0] = DLLHarness.pushBack_bounded.selector;
+        selectors[1] = DLLHarness.remove_bounded.selector;
+        targetSelector(FuzzSelector({addr: address(harness), selectors: selectors}));
+    }
+
+    /// @dev INV-1: size equals reachable node count from head walking next.
+    function invariant_sizeMatchesReachable() public view {
+        uint256 count;
+        bytes32 node = harness.head_();
+        while (node != SENTINEL) {
+            count++;
+            node = harness.next_(node);
+            require(count <= 256, "infinite loop detected");
+        }
+        assertEq(harness.size_(), count);
+    }
+
+    /// @dev INV-2: forward and reverse traversals visit same nodes in opposite order.
+    function invariant_forwardReverseSymmetry() public view {
+        uint256 sz = harness.size_();
+        if (sz == 0) return;
+
+        bytes32[] memory forward = new bytes32[](sz);
+        bytes32 node = harness.head_();
+        for (uint256 i; i < sz; i++) {
+            forward[i] = node;
+            node = harness.next_(node);
+        }
+
+        node = harness.tail_();
+        for (uint256 i = sz; i > 0; i--) {
+            assertEq(node, forward[i - 1]);
+            node = harness.prev_(node);
+        }
+    }
+
+    /// @dev INV-3: contains(SENTINEL) is always false.
+    function invariant_sentinelNeverContained() public view {
+        assertFalse(harness.contains_(SENTINEL));
     }
 }
