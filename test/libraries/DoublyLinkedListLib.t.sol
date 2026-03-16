@@ -2,7 +2,7 @@
 pragma solidity ^0.8.26;
 
 import "forge-std/Test.sol";
-import {DLL, SENTINEL, PREV, NEXT, contains, isEmpty, size, head, tail, pushBack, pushFront, InvalidNode, NodeAlreadyExists} from "../../src/libraries/DoublyLinkedListLib.sol";
+import {DLL, SENTINEL, PREV, NEXT, contains, isEmpty, size, head, tail, pushBack, pushFront, next, prev, InvalidNode, NodeAlreadyExists, NodeDoesNotExist} from "../../src/libraries/DoublyLinkedListLib.sol";
 
 contract DLLHarness {
     DLL internal list;
@@ -14,6 +14,8 @@ contract DLLHarness {
     function tail_() external view returns (bytes32) { return tail(list); }
     function pushBack_(bytes32 id) external { pushBack(list, id); }
     function pushFront_(bytes32 id) external { pushFront(list, id); }
+    function next_(bytes32 id) external view returns (bytes32) { return next(list, id); }
+    function prev_(bytes32 id) external view returns (bytes32) { return prev(list, id); }
 }
 
 contract DoublyLinkedListLibTest is Test {
@@ -107,5 +109,45 @@ contract DoublyLinkedListLibTest is Test {
         harness.pushFront_(A);
         vm.expectRevert(abi.encodeWithSelector(NodeAlreadyExists.selector, A));
         harness.pushFront_(A);
+    }
+
+    function test_next_singleNode_returnsSentinel() public {
+        bytes32 A = bytes32(uint256(1));
+        harness.pushBack_(A);
+        assertEq(harness.next_(A), SENTINEL);
+    }
+
+    function test_prev_singleNode_returnsSentinel() public {
+        bytes32 A = bytes32(uint256(1));
+        harness.pushBack_(A);
+        assertEq(harness.prev_(A), SENTINEL);
+    }
+
+    function test_next_twoNodes_traversal() public {
+        bytes32 A = bytes32(uint256(1));
+        bytes32 B = bytes32(uint256(2));
+        harness.pushBack_(A);
+        harness.pushBack_(B);
+        assertEq(harness.next_(A), B);
+        assertEq(harness.next_(B), SENTINEL);
+    }
+
+    function test_prev_twoNodes_traversal() public {
+        bytes32 A = bytes32(uint256(1));
+        bytes32 B = bytes32(uint256(2));
+        harness.pushBack_(A);
+        harness.pushBack_(B);
+        assertEq(harness.prev_(B), A);
+        assertEq(harness.prev_(A), SENTINEL);
+    }
+
+    function test_next_revertOnNonExistent() public {
+        vm.expectRevert(abi.encodeWithSelector(NodeDoesNotExist.selector, bytes32(uint256(99))));
+        harness.next_(bytes32(uint256(99)));
+    }
+
+    function test_prev_revertOnNonExistent() public {
+        vm.expectRevert(abi.encodeWithSelector(NodeDoesNotExist.selector, bytes32(uint256(99))));
+        harness.prev_(bytes32(uint256(99)));
     }
 }

@@ -62,6 +62,18 @@ function _validateInsert(DLL storage self, bytes32 id) view {
     if (contains(self, id)) revert NodeAlreadyExists(id);
 }
 
+/// @dev Returns the successor of `id`, or SENTINEL if `id` is the tail. Reverts if `id` is not in the list.
+function next(DLL storage self, bytes32 id) view returns (bytes32) {
+    if (!contains(self, id)) revert NodeDoesNotExist(id);
+    return self.nodes[id][NEXT];
+}
+
+/// @dev Returns the predecessor of `id`, or SENTINEL if `id` is the head. Reverts if `id` is not in the list.
+function prev(DLL storage self, bytes32 id) view returns (bytes32) {
+    if (!contains(self, id)) revert NodeDoesNotExist(id);
+    return self.nodes[id][PREV];
+}
+
 /// @dev Append `id` to the end of the list.
 function pushBack(DLL storage self, bytes32 id) {
     _validateInsert(self, id);
