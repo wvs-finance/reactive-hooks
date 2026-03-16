@@ -18,12 +18,12 @@
 **Estimated size**: ~300 lines
 
 ### Included Subtasks
-- [ ] T001 Write prove_originId_deterministic (INV-001) in `test/kontrol/F1_OriginIdentity.k.sol`
-- [ ] T002 Run `kontrol build` + `kontrol prove --match-test prove_originId_deterministic`, verify pass
-- [ ] T003 Write prove_originId_injective (INV-002)
-- [ ] T004 Run `kontrol prove --match-test prove_originId_injective`, verify pass
-- [ ] T005 Write prove_originId_no_zero_image (INV-003)
-- [ ] T006 Run `kontrol prove --match-test prove_originId_no_zero_image`, verify pass
+- [x] T001 Write prove_originId_deterministic (INV-001) in `test/kontrol/F1_OriginIdentity.k.sol`
+- [x] T002 Run `kontrol build` + `kontrol prove --match-test prove_originId_deterministic`, verify pass
+- [x] T003 Write prove_originId_injective (INV-002)
+- [x] T004 Run `kontrol prove --match-test prove_originId_injective`, verify pass
+- [x] T005 Write prove_originId_no_zero_image (INV-003)
+- [x] T006 Run `kontrol prove --match-test prove_originId_no_zero_image`, verify pass
 
 ### Implementation Notes
 - Each proof is written ONE AT A TIME per TDD skill Phase 4 rules
