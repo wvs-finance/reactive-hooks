@@ -1,7 +1,7 @@
 ---
 work_package_id: WP02
 title: Origin Registry Storage & System Proofs
-lane: "doing"
+lane: "for_review"
 dependencies: [WP01]
 base_branch: 001-origin-identity-registry-WP01
 base_commit: 330991e3a3b060d9acd84b160554f11870d38c8f
@@ -281,3 +281,4 @@ forge test --match-test testFuzz_chain_count_consistency -vvv
 
 - 2026-03-16T12:00:00Z – system – lane=planned – Prompt created.
 - 2026-03-16T12:19:42Z – claude – shell_pid=60179 – lane=doing – Assigned agent via workflow command
+- 2026-03-16T12:20:51Z – claude – shell_pid=60179 – lane=for_review – All 5 proofs pass (INV-004 through INV-008). Ready for review.
