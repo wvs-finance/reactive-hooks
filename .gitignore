@@ -23,3 +23,18 @@ foundry-out/
 .DS_Store
 .vscode/
 .gitignore/
+
+# Added by Spec Kitty CLI (auto-managed)
+.claude/
+.codex/
+.opencode/
+.windsurf/
+.gemini/
+.qwen/
+.kilocode/
+.augment/
+.roo/
+.amazonq/
+.github/copilot/
+.kittify/.dashboard
+.kittify/missions/__pycache__/
