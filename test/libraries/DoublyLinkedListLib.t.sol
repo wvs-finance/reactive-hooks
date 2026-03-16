@@ -2,7 +2,7 @@
 pragma solidity ^0.8.26;
 
 import "forge-std/Test.sol";
-import {DLL, SENTINEL, PREV, NEXT, contains, isEmpty, size, head, tail, pushBack, pushFront, next, prev, remove, InvalidNode, NodeAlreadyExists, NodeDoesNotExist} from "../../src/libraries/DoublyLinkedListLib.sol";
+import {DLL, SENTINEL, PREV, NEXT, contains, isEmpty, size, head, tail, pushBack, pushFront, next, prev, remove, insertAfter, insertBefore, InvalidNode, NodeAlreadyExists, NodeDoesNotExist} from "../../src/libraries/DoublyLinkedListLib.sol";
 
 contract DLLHarness {
     DLL internal list;
@@ -17,6 +17,8 @@ contract DLLHarness {
     function next_(bytes32 id) external view returns (bytes32) { return next(list, id); }
     function prev_(bytes32 id) external view returns (bytes32) { return prev(list, id); }
     function remove_(bytes32 id) external { remove(list, id); }
+    function insertAfter_(bytes32 anchor, bytes32 id) external { insertAfter(list, anchor, id); }
+    function insertBefore_(bytes32 anchor, bytes32 id) external { insertBefore(list, anchor, id); }
 }
 
 contract DoublyLinkedListLibTest is Test {
@@ -211,5 +213,103 @@ contract DoublyLinkedListLibTest is Test {
     function test_remove_revertOnNonExistent() public {
         vm.expectRevert(abi.encodeWithSelector(NodeDoesNotExist.selector, bytes32(uint256(99))));
         harness.remove_(bytes32(uint256(99)));
+    }
+
+    function test_insertAfter_middle() public {
+        bytes32 A = bytes32(uint256(1));
+        bytes32 B = bytes32(uint256(2));
+        bytes32 C = bytes32(uint256(3));
+        harness.pushBack_(A);
+        harness.pushBack_(C);
+        harness.insertAfter_(A, B);  // A -> B -> C
+        assertEq(harness.next_(A), B);
+        assertEq(harness.next_(B), C);
+        assertEq(harness.prev_(C), B);
+        assertEq(harness.size_(), 3);
+    }
+
+    function test_insertAfter_tail() public {
+        bytes32 A = bytes32(uint256(1));
+        bytes32 B = bytes32(uint256(2));
+        harness.pushBack_(A);
+        harness.insertAfter_(A, B);  // A -> B
+        assertEq(harness.tail_(), B);
+        assertEq(harness.next_(A), B);
+        assertEq(harness.next_(B), SENTINEL);
+    }
+
+    function test_insertBefore_middle() public {
+        bytes32 A = bytes32(uint256(1));
+        bytes32 B = bytes32(uint256(2));
+        bytes32 C = bytes32(uint256(3));
+        harness.pushBack_(A);
+        harness.pushBack_(C);
+        harness.insertBefore_(C, B);  // A -> B -> C
+        assertEq(harness.next_(A), B);
+        assertEq(harness.next_(B), C);
+        assertEq(harness.prev_(B), A);
+        assertEq(harness.size_(), 3);
+    }
+
+    function test_insertBefore_head() public {
+        bytes32 A = bytes32(uint256(1));
+        bytes32 B = bytes32(uint256(2));
+        harness.pushBack_(A);
+        harness.insertBefore_(A, B);  // B -> A
+        assertEq(harness.head_(), B);
+        assertEq(harness.prev_(A), B);
+        assertEq(harness.prev_(B), SENTINEL);
+    }
+
+    function test_insertAfter_revertOnSentinelAnchor() public {
+        vm.expectRevert(InvalidNode.selector);
+        harness.insertAfter_(SENTINEL, bytes32(uint256(1)));
+    }
+
+    function test_insertBefore_revertOnSentinelAnchor() public {
+        vm.expectRevert(InvalidNode.selector);
+        harness.insertBefore_(SENTINEL, bytes32(uint256(1)));
+    }
+
+    function test_insertAfter_revertOnNonExistentAnchor() public {
+        vm.expectRevert(abi.encodeWithSelector(NodeDoesNotExist.selector, bytes32(uint256(99))));
+        harness.insertAfter_(bytes32(uint256(99)), bytes32(uint256(1)));
+    }
+
+    function test_insertAfter_revertOnDuplicateId() public {
+        bytes32 A = bytes32(uint256(1));
+        bytes32 B = bytes32(uint256(2));
+        harness.pushBack_(A);
+        harness.pushBack_(B);
+        vm.expectRevert(abi.encodeWithSelector(NodeAlreadyExists.selector, A));
+        harness.insertAfter_(B, A);
+    }
+
+    function test_insertAfter_revertOnSentinelId() public {
+        bytes32 A = bytes32(uint256(1));
+        harness.pushBack_(A);
+        vm.expectRevert(InvalidNode.selector);
+        harness.insertAfter_(A, SENTINEL);
+    }
+
+    function test_insertBefore_revertOnNonExistentAnchor() public {
+        vm.expectRevert(abi.encodeWithSelector(NodeDoesNotExist.selector, bytes32(uint256(99))));
+        harness.insertBefore_(bytes32(uint256(99)), bytes32(uint256(1)));
+    }
+
+    function test_insertBefore_revertOnDuplicateId() public {
+        bytes32 A = bytes32(uint256(1));
+        bytes32 B = bytes32(uint256(2));
+        harness.pushBack_(A);
+        harness.pushBack_(B);
+        vm.expectRevert(abi.encodeWithSelector(NodeAlreadyExists.selector, A));
+        harness.insertBefore_(B, A);
+    }
+
+    function test_insertBefore_revertOnSentinelId() public {
+        bytes32 A = bytes32(uint256(1));
+        harness.pushBack_(A);
+        vm.expectRevert(InvalidNode.selector);
+        harness.insertBefore_(A, SENTINEL);
     }
 }

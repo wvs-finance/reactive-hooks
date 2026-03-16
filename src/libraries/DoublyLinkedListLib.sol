@@ -87,6 +87,26 @@ function remove(DLL storage self, bytes32 id) {
     self.size--;
 }
 
+/// @dev Validates anchor for insertAfter/insertBefore. Anchor must not be SENTINEL and must exist.
+function _validateAnchor(DLL storage self, bytes32 anchor) view {
+    if (anchor == SENTINEL) revert InvalidNode();
+    if (!contains(self, anchor)) revert NodeDoesNotExist(anchor);
+}
+
+/// @dev Insert `id` immediately after `anchor`.
+function insertAfter(DLL storage self, bytes32 anchor, bytes32 id) {
+    _validateAnchor(self, anchor);
+    _validateInsert(self, id);
+    _insert(self, anchor, id, self.nodes[anchor][NEXT]);
+}
+
+/// @dev Insert `id` immediately before `anchor`.
+function insertBefore(DLL storage self, bytes32 anchor, bytes32 id) {
+    _validateAnchor(self, anchor);
+    _validateInsert(self, id);
+    _insert(self, self.nodes[anchor][PREV], id, anchor);
+}
+
 /// @dev Append `id` to the end of the list.
 function pushBack(DLL storage self, bytes32 id) {
     _validateInsert(self, id);
