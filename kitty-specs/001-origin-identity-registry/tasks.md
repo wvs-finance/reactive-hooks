@@ -52,13 +52,13 @@
 **Estimated size**: ~400 lines
 
 ### Included Subtasks
-- [ ] T007 Write Foundry test harness contract wrapping OriginRegistryStorageMod functions
-- [ ] T008 Write prove_registerOrigin_idempotent (INV-004)
-- [ ] T009 Run `kontrol prove --match-test prove_registerOrigin_idempotent`, verify pass
-- [ ] T010 Write prove_registerOrigin_increments_count (INV-005)
-- [ ] T011 Write prove_lookupOrigin_roundtrip (INV-006)
-- [ ] T012 Write testFuzz_chain_count_consistency (INV-007) — fuzz test
-- [ ] T013 Write prove_no_phantom_origins (INV-008)
+- [x] T007 Write Foundry test harness contract wrapping OriginRegistryStorageMod functions
+- [x] T008 Write prove_registerOrigin_idempotent (INV-004)
+- [x] T009 Run `kontrol prove --match-test prove_registerOrigin_idempotent`, verify pass
+- [x] T010 Write prove_registerOrigin_increments_count (INV-005)
+- [x] T011 Write prove_lookupOrigin_roundtrip (INV-006)
+- [x] T012 Write testFuzz_chain_count_consistency (INV-007) — fuzz test
+- [x] T013 Write prove_no_phantom_origins (INV-008)
 
 ### Implementation Notes
 - T007 creates a contract that exposes storage functions for testing (inherits Test)
