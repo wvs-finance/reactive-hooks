@@ -2,6 +2,7 @@
 pragma solidity ^0.8.26;
 
 import {OriginEndpoint} from "../types/OriginEndpoint.sol";
+import {DLL, pushBack, contains, size, head, isEmpty} from "../libraries/DoublyLinkedListLib.sol";
 
 /// @dev Dual-representation storage for origin endpoints.
 ///      Hash-indexed for O(1) lookup (INV-006 round-trip).
@@ -11,9 +12,8 @@ struct OriginRegistryStorage {
     mapping(bytes32 => OriginEndpoint) origins;
     /// @dev originId => existence flag. Dedup guard (INV-004 idempotent).
     mapping(bytes32 => bool) exists;
-    /// @dev chainId => list of originIds. Enumeration by chain.
-    ///      Container TBD — placeholder for doubly-linked list integration.
-    mapping(uint32 => bytes32[]) originsByChain;
+    /// @dev chainId => doubly-linked list of originIds. O(1) insert/remove, FIFO order.
+    mapping(uint32 => DLL) originsByChain;
     /// @dev Total registered origin count across all chains (INV-007 consistency).
     uint256 totalCount;
 }
@@ -36,7 +36,7 @@ function setOrigin(OriginRegistryStorage storage s, OriginEndpoint memory endpoi
 
     s.origins[id] = endpoint;
     s.exists[id] = true;
-    s.originsByChain[endpoint.chainId].push(id);
+    pushBack(s.originsByChain[endpoint.chainId], id);
     s.totalCount++;
 }
 
@@ -54,12 +54,22 @@ function getOrigin(OriginRegistryStorage storage s, bytes32 id) view returns (Or
 
 /// @dev Get count of origins registered on a specific chain.
 function getOriginCountByChain(OriginRegistryStorage storage s, uint32 chainId) view returns (uint256) {
-    return s.originsByChain[chainId].length;
+    return size(s.originsByChain[chainId]);
 }
 
-/// @dev Get originId at index for a specific chain. For enumeration.
-function getOriginIdByChainAt(OriginRegistryStorage storage s, uint32 chainId, uint256 index) view returns (bytes32) {
-    return s.originsByChain[chainId][index];
+/// @dev Get the first originId in the chain's list, or bytes32(0) if empty.
+function getOriginHeadByChain(OriginRegistryStorage storage s, uint32 chainId) view returns (bytes32) {
+    return head(s.originsByChain[chainId]);
+}
+
+/// @dev Check if a chain has any registered origins.
+function isChainEmpty(OriginRegistryStorage storage s, uint32 chainId) view returns (bool) {
+    return isEmpty(s.originsByChain[chainId]);
+}
+
+/// @dev Check if a specific originId is in a chain's list.
+function isOriginInChain(OriginRegistryStorage storage s, uint32 chainId, bytes32 id) view returns (bool) {
+    return contains(s.originsByChain[chainId], id);
 }
 
 /// @dev Get total registered origin count across all chains (INV-007).
