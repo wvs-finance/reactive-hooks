@@ -74,6 +74,19 @@ function prev(DLL storage self, bytes32 id) view returns (bytes32) {
     return self.nodes[id][PREV];
 }
 
+/// @dev Remove `id` from the list. Reverts if `id` is sentinel or not in the list.
+function remove(DLL storage self, bytes32 id) {
+    if (id == SENTINEL) revert InvalidNode();
+    if (!contains(self, id)) revert NodeDoesNotExist(id);
+    bytes32 prevNode = self.nodes[id][PREV];
+    bytes32 nextNode = self.nodes[id][NEXT];
+    self.nodes[prevNode][NEXT] = nextNode;
+    self.nodes[nextNode][PREV] = prevNode;
+    self.nodes[id][PREV] = SENTINEL;
+    self.nodes[id][NEXT] = SENTINEL;
+    self.size--;
+}
+
 /// @dev Append `id` to the end of the list.
 function pushBack(DLL storage self, bytes32 id) {
     _validateInsert(self, id);

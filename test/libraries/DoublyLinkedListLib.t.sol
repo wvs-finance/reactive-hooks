@@ -2,7 +2,7 @@
 pragma solidity ^0.8.26;
 
 import "forge-std/Test.sol";
-import {DLL, SENTINEL, PREV, NEXT, contains, isEmpty, size, head, tail, pushBack, pushFront, next, prev, InvalidNode, NodeAlreadyExists, NodeDoesNotExist} from "../../src/libraries/DoublyLinkedListLib.sol";
+import {DLL, SENTINEL, PREV, NEXT, contains, isEmpty, size, head, tail, pushBack, pushFront, next, prev, remove, InvalidNode, NodeAlreadyExists, NodeDoesNotExist} from "../../src/libraries/DoublyLinkedListLib.sol";
 
 contract DLLHarness {
     DLL internal list;
@@ -16,6 +16,7 @@ contract DLLHarness {
     function pushFront_(bytes32 id) external { pushFront(list, id); }
     function next_(bytes32 id) external view returns (bytes32) { return next(list, id); }
     function prev_(bytes32 id) external view returns (bytes32) { return prev(list, id); }
+    function remove_(bytes32 id) external { remove(list, id); }
 }
 
 contract DoublyLinkedListLibTest is Test {
@@ -149,5 +150,66 @@ contract DoublyLinkedListLibTest is Test {
     function test_prev_revertOnNonExistent() public {
         vm.expectRevert(abi.encodeWithSelector(NodeDoesNotExist.selector, bytes32(uint256(99))));
         harness.prev_(bytes32(uint256(99)));
+    }
+
+    function test_remove_onlyNode() public {
+        bytes32 A = bytes32(uint256(1));
+        harness.pushBack_(A);
+        harness.remove_(A);
+        assertFalse(harness.contains_(A));
+        assertEq(harness.size_(), 0);
+        assertTrue(harness.isEmpty_());
+        assertEq(harness.head_(), SENTINEL);
+        assertEq(harness.tail_(), SENTINEL);
+    }
+
+    function test_remove_head() public {
+        bytes32 A = bytes32(uint256(1));
+        bytes32 B = bytes32(uint256(2));
+        bytes32 C = bytes32(uint256(3));
+        harness.pushBack_(A);
+        harness.pushBack_(B);
+        harness.pushBack_(C);
+        harness.remove_(A);
+        assertEq(harness.head_(), B);
+        assertEq(harness.tail_(), C);
+        assertEq(harness.size_(), 2);
+        assertFalse(harness.contains_(A));
+    }
+
+    function test_remove_tail() public {
+        bytes32 A = bytes32(uint256(1));
+        bytes32 B = bytes32(uint256(2));
+        bytes32 C = bytes32(uint256(3));
+        harness.pushBack_(A);
+        harness.pushBack_(B);
+        harness.pushBack_(C);
+        harness.remove_(C);
+        assertEq(harness.head_(), A);
+        assertEq(harness.tail_(), B);
+        assertEq(harness.size_(), 2);
+    }
+
+    function test_remove_middle() public {
+        bytes32 A = bytes32(uint256(1));
+        bytes32 B = bytes32(uint256(2));
+        bytes32 C = bytes32(uint256(3));
+        harness.pushBack_(A);
+        harness.pushBack_(B);
+        harness.pushBack_(C);
+        harness.remove_(B);
+        assertEq(harness.next_(A), C);
+        assertEq(harness.prev_(C), A);
+        assertEq(harness.size_(), 2);
+    }
+
+    function test_remove_revertOnSentinel() public {
+        vm.expectRevert(InvalidNode.selector);
+        harness.remove_(SENTINEL);
+    }
+
+    function test_remove_revertOnNonExistent() public {
+        vm.expectRevert(abi.encodeWithSelector(NodeDoesNotExist.selector, bytes32(uint256(99))));
+        harness.remove_(bytes32(uint256(99)));
     }
 }
