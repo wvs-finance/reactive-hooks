@@ -1,28 +1,31 @@
 ---
-work_package_id: "WP01"
-subtasks:
-  - "T001"
-  - "T002"
-  - "T003"
-  - "T004"
-  - "T005"
-  - "T006"
-title: "Origin Types & Kontrol Proofs"
-phase: "Phase 4 - Scaffold Kontrol Proofs"
-lane: "planned"
-assignee: ""
-agent: ""
-shell_pid: ""
-review_status: ""
-reviewed_by: ""
+work_package_id: WP01
+title: Origin Types & Kontrol Proofs
+lane: "doing"
 dependencies: []
-requirement_refs: ["FR-001"]
+base_branch: feat/subscription-lib-replace-mod
+base_commit: 350d911a0a981615edf1bd2ee40d883c95d67912
+created_at: '2026-03-16T12:02:48.074367+00:00'
+subtasks:
+- T001
+- T002
+- T003
+- T004
+- T005
+- T006
+phase: Phase 4 - Scaffold Kontrol Proofs
+assignee: ''
+agent: ''
+shell_pid: "45126"
+review_status: ''
+reviewed_by: ''
 history:
-  - timestamp: "2026-03-16T12:00:00Z"
-    lane: "planned"
-    agent: "system"
-    shell_pid: ""
-    action: "Prompt generated via /spec-kitty.tasks"
+- timestamp: '2026-03-16T12:00:00Z'
+  lane: planned
+  agent: system
+  shell_pid: ''
+  action: Prompt generated via /spec-kitty.tasks
+requirement_refs: [FR-001]
 ---
 
 # Work Package Prompt: WP01 – Origin Types & Kontrol Proofs
