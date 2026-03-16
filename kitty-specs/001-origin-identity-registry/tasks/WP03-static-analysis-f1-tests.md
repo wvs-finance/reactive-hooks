@@ -18,7 +18,7 @@ subtasks:
 - T022
 phase: Phase 5-6 - Static Analysis Gate & Implementation Tests
 assignee: ''
-agent: ''
+agent: "claude"
 shell_pid: "62132"
 review_status: ''
 reviewed_by: ''
@@ -225,3 +225,4 @@ forge test --match-path test/F1_OriginIdentity.t.sol -vvv
 ## Activity Log
 
 - 2026-03-16T12:00:00Z – system – lane=planned – Prompt created.
+- 2026-03-16T12:21:19Z – claude – shell_pid=62132 – lane=doing – Assigned agent via workflow command
