@@ -1,7 +1,7 @@
 ---
 work_package_id: WP03
 title: Static Analysis & F1 Integration Tests
-lane: "doing"
+lane: "for_review"
 dependencies: [WP02]
 base_branch: 001-origin-identity-registry-WP02
 base_commit: 863f6be39b095b2518dd5d57cfce5ec29b4a80c6
@@ -226,3 +226,4 @@ forge test --match-path test/F1_OriginIdentity.t.sol -vvv
 
 - 2026-03-16T12:00:00Z – system – lane=planned – Prompt created.
 - 2026-03-16T12:21:19Z – claude – shell_pid=62132 – lane=doing – Assigned agent via workflow command
+- 2026-03-16T12:23:05Z – claude – shell_pid=62132 – lane=for_review – Slither clean, all 6 F1 tests pass. All 10 invariants covered.
